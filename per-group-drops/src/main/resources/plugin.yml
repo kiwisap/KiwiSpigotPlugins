@@ -1,0 +1,5 @@
+name: KiwiPerGroupDrops
+main: nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsPlugin
+version: ${per-group-drops.version}
+author: Itz_KiwiSap_
+api-version: 1.16
