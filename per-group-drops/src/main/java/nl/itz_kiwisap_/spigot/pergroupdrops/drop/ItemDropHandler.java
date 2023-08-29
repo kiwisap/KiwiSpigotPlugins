@@ -30,6 +30,7 @@ public final class ItemDropHandler implements Listener {
     public ItemDropHandler(KiwiPerGroupDropsPlugin plugin) {
         this.plugin = plugin;
 
+        // Don't spawn entities client-side that are not supposed to be seen by the player
         plugin.getPacketInterceptorHandler().interceptClientbound(KClientboundPacketSpawnEntity.class, (player, packet) -> {
             GroupProvider groupProvider = this.plugin.getGroupProvider();
             if (groupProvider == null) return false; // No group provider set, so no groups to handle
