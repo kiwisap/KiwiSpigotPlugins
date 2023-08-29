@@ -1,8 +1,8 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops;
 
 import lombok.Getter;
-import nl.itz_kiwisap_.spigot.KiwiSpigotLibraryPlugin;
-import nl.itz_kiwisap_.spigot.utils.JavaReflections;
+import nl.itz_kiwisap_.spigot.common.KiwiSpigotPlugin;
+import nl.itz_kiwisap_.spigot.common.utils.JavaReflections;
 import nl.itz_kiwisap_.spigot.pergroupdrops.api.KiwiPerGroupDrops;
 import nl.itz_kiwisap_.spigot.pergroupdrops.api.KiwiPerGroupDropsAPI;
 import nl.itz_kiwisap_.spigot.pergroupdrops.api.provider.GlowProvider;
@@ -12,7 +12,7 @@ import nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard.PerGroupDropsScoreboardHa
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public final class KiwiPerGroupDropsPlugin extends KiwiSpigotLibraryPlugin implements KiwiPerGroupDrops {
+public final class KiwiPerGroupDropsPlugin extends KiwiSpigotPlugin implements KiwiPerGroupDrops {
 
     private GroupProvider groupProvider;
     private GlowProvider glowProvider;
