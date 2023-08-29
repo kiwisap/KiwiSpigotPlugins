@@ -1,4 +1,5 @@
 per-group-drops:
+    - toggle mode for players (command)
     - admin permission
         - maybe add toggle mode with double drop for "global drop
     - skyblock plugin hooks (team members)
