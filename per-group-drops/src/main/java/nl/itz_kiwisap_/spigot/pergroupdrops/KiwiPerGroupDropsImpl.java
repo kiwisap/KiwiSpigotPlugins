@@ -1,6 +1,5 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops;
 
-import lombok.Getter;
 import nl.itz_kiwisap_.spigot.common.KiwiSpigotLibrary;
 import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
 import nl.itz_kiwisap_.spigot.pergroupdrops.drop.ItemDropHandler;
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
 
     private static final Map<JavaPlugin, KiwiPerGroupDropsImpl> INSTANCES = new HashMap<>();
@@ -56,6 +54,26 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
         plugin.getServer().getPluginManager().registerEvents(new ItemDropHandler(this), plugin);
 
         INSTANCES.put(plugin, this);
+    }
+
+    @Override
+    public @NotNull JavaPlugin getPlugin() {
+        return this.plugin;
+    }
+
+    @Override
+    public @NotNull KiwiPerGroupDropsSettingsProvider getSettingsProvider() {
+        return this.settingsProvider;
+    }
+
+    @Override
+    public @NotNull PacketInterceptorHandler getPacketInterceptorHandler() {
+        return this.packetInterceptorHandler;
+    }
+
+    @Override
+    public @NotNull KiwiPerGroupDropsProvider getProvider() {
+        return this.provider;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops.plugin;
 
-import lombok.Getter;
 import nl.itz_kiwisap_.spigot.pergroupdrops.settings.KiwiPerGroupDropsSetting;
 import nl.itz_kiwisap_.spigot.pergroupdrops.settings.KiwiPerGroupDropsSettingsProvider;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 final class KiwiPerGroupDropsPluginSettingsProvider implements KiwiPerGroupDropsSettingsProvider {
 
     private static final String SETTINGS_PREFIX = "settings.";
@@ -22,6 +20,11 @@ final class KiwiPerGroupDropsPluginSettingsProvider implements KiwiPerGroupDrops
     KiwiPerGroupDropsPluginSettingsProvider(KiwiPerGroupDropsPlugin plugin, FileConfiguration configuration) {
         this.plugin = plugin;
         this.configuration = configuration;
+    }
+
+    @Override
+    public @NotNull Map<KiwiPerGroupDropsSetting, Object> getSettings() {
+        return this.settings;
     }
 
     @Override

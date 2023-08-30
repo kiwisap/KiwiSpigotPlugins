@@ -1,13 +1,9 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops.provider;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Getter
-@AllArgsConstructor
 public enum GlowColor {
     BLACK(ChatColor.BLACK),
     DARK_BLUE(ChatColor.DARK_BLUE),
@@ -27,6 +23,14 @@ public enum GlowColor {
     WHITE(ChatColor.WHITE);
 
     private final ChatColor chatColor;
+
+    GlowColor(ChatColor chatColor) {
+        this.chatColor = chatColor;
+    }
+
+    public @NotNull ChatColor getChatColor() {
+        return this.chatColor;
+    }
 
     public static @Nullable GlowColor getByName(@NotNull String color) {
         for (GlowColor glowColor : values()) {

@@ -1,6 +1,5 @@
 package nl.itz_kiwisap_.spigot.common;
 
-import lombok.Getter;
 import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
-@Getter
 public final class KiwiSpigotLibrary {
 
     private static KiwiSpigotLibrary INSTANCE = null;
@@ -41,5 +39,9 @@ public final class KiwiSpigotLibrary {
         }
 
         this.packetInterceptorHandler = new PacketInterceptorHandler(plugin);
+    }
+
+    public @NotNull PacketInterceptorHandler getPacketInterceptorHandler() {
+        return this.packetInterceptorHandler;
     }
 }
