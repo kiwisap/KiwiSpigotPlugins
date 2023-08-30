@@ -12,6 +12,7 @@ import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsConstants;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowColor;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.settings.KiwiPerGroupDropsSetting;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -72,13 +73,32 @@ public final class ItemDropHandler implements Listener {
                 return false;
             }
 
-            return true;
+            return KiwiPerGroupDropsSetting.HIDE_ITEMS_FROM_OTHER_GROUPS.getBoolean(instance.getSettingsProvider());
         });
 
         // Make sure the glowing flag is set for the player to see the item, but only when the entity flags metadata is provided in the packet
         instance.getPacketInterceptorHandler().interceptClientbound(KClientboundPacketEntityMetadata.class, (player, packet) -> {
-            if (player.hasPermission(KiwiPerGroupDropsConstants.BYPASS_PERMISSION)) {
-                int entityId = packet.entityId();
+            int entityId = packet.entityId();
+
+            boolean hideItemsFromOtherGroupsCheck = KiwiPerGroupDropsSetting.HIDE_ITEMS_FROM_OTHER_GROUPS.getBoolean(instance.getSettingsProvider());
+            if (!hideItemsFromOtherGroupsCheck) {
+                GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
+
+                if (groupProvider != null) {
+                    String group = groupProvider.getGroup(player);
+
+                    if (group != null) {
+                        for (Map.Entry<String, Collection<Integer>> entry : this.groupItems.entrySet()) {
+                            if (entry.getValue().contains(entityId)) {
+                                hideItemsFromOtherGroupsCheck = entry.getKey().equals(group);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (player.hasPermission(KiwiPerGroupDropsConstants.BYPASS_PERMISSION) || !hideItemsFromOtherGroupsCheck) {
                 if (!this.playerItems.contains(entityId)) return false;
 
                 KClientboundPacketEntityMetadata.Entry<Byte> entry = packet.getEntry(0);

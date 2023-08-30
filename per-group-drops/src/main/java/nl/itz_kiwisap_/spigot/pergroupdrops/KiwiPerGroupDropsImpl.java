@@ -8,6 +8,7 @@ import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard.PerGroupDropsScoreboardHandler;
+import nl.itz_kiwisap_.spigot.pergroupdrops.settings.KiwiPerGroupDropsSettingsProvider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -31,13 +32,17 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
     private static PerGroupDropsScoreboardHandler scoreboardHandler;
 
     private final JavaPlugin plugin;
+    private final KiwiPerGroupDropsSettingsProvider settingsProvider;
     private final PacketInterceptorHandler packetInterceptorHandler;
     private final KiwiPerGroupDropsProvider provider;
 
-    KiwiPerGroupDropsImpl(JavaPlugin plugin) {
+    KiwiPerGroupDropsImpl(JavaPlugin plugin, KiwiPerGroupDropsSettingsProvider settingsProvider) {
         KiwiSpigotLibrary library = KiwiSpigotLibrary.register(plugin);
 
         this.plugin = plugin;
+        this.settingsProvider = settingsProvider;
+        this.settingsProvider.load();
+
         this.packetInterceptorHandler = library.getPacketInterceptorHandler();
         this.provider = new KiwiPerGroupDropsProvider();
 
