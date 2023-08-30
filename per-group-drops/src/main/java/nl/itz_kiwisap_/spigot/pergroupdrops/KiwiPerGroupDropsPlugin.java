@@ -18,6 +18,11 @@ public final class KiwiPerGroupDropsPlugin extends JavaPlugin implements KiwiPer
     }
 
     @Override
+    public @NotNull JavaPlugin getPlugin() {
+        return this;
+    }
+
+    @Override
     public @NotNull PacketInterceptorHandler getPacketInterceptorHandler() {
         return this.instance.getPacketInterceptorHandler();
     }
