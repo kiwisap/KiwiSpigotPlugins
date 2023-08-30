@@ -1,2 +1,14 @@
 settings:
   hide-items-from-other-groups: true
+
+hooks:
+  # This is the name of the plugin for the group provider you want to use.
+  # Available options:
+  # - "Custom" (default) - Implement your own group provider using the API.
+  # - "SuperiorSkyblock2"
+  group-provider: "Custom"
+
+  # This is the name of the plugin for the glow provider you want to use.
+  # Available options:
+  # - "Custom" (default) - Implement your own group provider using the API.
+  glow-provider: "Custom"

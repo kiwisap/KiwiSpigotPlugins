@@ -2,6 +2,7 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.plugin;
 
 import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
+import nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.KiwiPerGroupDropsHooks;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
@@ -20,6 +21,10 @@ public final class KiwiPerGroupDropsPlugin extends JavaPlugin implements KiwiPer
 
         KiwiPerGroupDropsPluginSettingsProvider settingsProvider = new KiwiPerGroupDropsPluginSettingsProvider(this, super.getConfig());
         this.instance = KiwiPerGroupDrops.create(this, settingsProvider);
+
+        KiwiPerGroupDropsHooks hooks = new KiwiPerGroupDropsHooks(this);
+        hooks.enableGroupProviderHook(settingsProvider.getGroupProviderHook());
+        hooks.enableGlowProviderHook(settingsProvider.getGlowProviderHook());
     }
 
     @Override

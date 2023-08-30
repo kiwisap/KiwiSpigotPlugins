@@ -29,6 +29,14 @@ final class KiwiPerGroupDropsPluginSettingsProvider implements KiwiPerGroupDrops
         return this.settings.get(setting);
     }
 
+    String getGroupProviderHook() {
+        return this.configuration.getString("hooks.group-provider");
+    }
+
+    String getGlowProviderHook() {
+        return this.configuration.getString("hooks.glow-provider");
+    }
+
     @Override
     public void load() {
         this.settings.clear();
