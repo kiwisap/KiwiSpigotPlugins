@@ -2,9 +2,9 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.drop;
 
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketSpawnEntity;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
-import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsPlugin;
-import nl.itz_kiwisap_.spigot.pergroupdrops.api.provider.GlowProvider;
-import nl.itz_kiwisap_.spigot.pergroupdrops.api.provider.GroupProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -25,14 +25,14 @@ public final class ItemDropHandler implements Listener {
     private final Collection<Integer> playerItems = new HashSet<>();
     private final Map<String, Collection<Integer>> groupItems = new HashMap<>();
 
-    private final KiwiPerGroupDropsPlugin plugin;
+    private final KiwiPerGroupDrops instance;
 
-    public ItemDropHandler(KiwiPerGroupDropsPlugin plugin) {
-        this.plugin = plugin;
+    public ItemDropHandler(KiwiPerGroupDrops instance) {
+        this.instance = instance;
 
         // Don't spawn entities client-side that are not supposed to be seen by the player
-        plugin.getPacketInterceptorHandler().interceptClientbound(KClientboundPacketSpawnEntity.class, (player, packet) -> {
-            GroupProvider groupProvider = this.plugin.getGroupProvider();
+        instance.getPacketInterceptorHandler().interceptClientbound(KClientboundPacketSpawnEntity.class, (player, packet) -> {
+            GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
             if (groupProvider == null) return false; // No group provider set, so no groups to handle
 
             String group = groupProvider.getGroup(player);
@@ -47,7 +47,7 @@ public final class ItemDropHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerDropItem(PlayerDropItemEvent event) {
-        GroupProvider groupProvider = this.plugin.getGroupProvider();
+        GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
         if (groupProvider == null) return; // No group provider set, so no groups to handle
 
         Player player = event.getPlayer();
@@ -56,17 +56,17 @@ public final class ItemDropHandler implements Listener {
 
         Item item = event.getItemDrop();
 
-        GlowProvider glowProvider = this.plugin.getGlowProvider();
+        GlowProvider glowProvider = this.instance.getProvider().getGlowProvider();
         if (glowProvider != null) {
             ChatColor glowColor = glowProvider.getGlowColor(group, item.getItemStack());
 
             if (glowColor != null) {
-                KScoreboardTeam scoreboardTeam = this.plugin.getScoreboardHandler().getTeam(glowColor);
+                KScoreboardTeam scoreboardTeam = this.instance.getScoreboardHandler().getTeam(glowColor);
 
                 // If team is found, enable glowing and add the item to the team with the glow color
                 if (scoreboardTeam != null) {
                     item.setGlowing(true);
-                    this.plugin.getScoreboardHandler().addItemToTeam(player, scoreboardTeam, item);
+                    this.instance.getScoreboardHandler().addItemToTeam(player, scoreboardTeam, item);
                 }
             }
         }
@@ -91,7 +91,7 @@ public final class ItemDropHandler implements Listener {
             return;
         }
 
-        GroupProvider groupProvider = this.plugin.getGroupProvider();
+        GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
         if (groupProvider == null) return; // No group provider set, so no groups to handle
 
         String group = groupProvider.getGroup(player);
@@ -108,7 +108,7 @@ public final class ItemDropHandler implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onEntityRemoveFromWorld(ItemDespawnEvent event) {
+    private void onItemDespawn(ItemDespawnEvent event) {
         Item item = event.getEntity();
         this.playerItems.remove(item.getEntityId());
         this.groupItems.values().forEach(items -> items.remove(item.getEntityId()));

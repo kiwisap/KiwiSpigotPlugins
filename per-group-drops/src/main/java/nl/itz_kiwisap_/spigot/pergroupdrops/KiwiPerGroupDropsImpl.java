@@ -1,0 +1,83 @@
+package nl.itz_kiwisap_.spigot.pergroupdrops;
+
+import lombok.Getter;
+import nl.itz_kiwisap_.spigot.common.KiwiSpigotLibrary;
+import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
+import nl.itz_kiwisap_.spigot.pergroupdrops.drop.ItemDropHandler;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard.PerGroupDropsScoreboardHandler;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
+
+    private static final Map<JavaPlugin, KiwiPerGroupDropsImpl> INSTANCES = new HashMap<>();
+
+    public static KiwiPerGroupDrops getInstance(JavaPlugin plugin) {
+        return INSTANCES.get(plugin);
+    }
+
+    // Make scoreboard handler static so the color teams are only created once
+    private static final PerGroupDropsScoreboardHandler scoreboardHandler = new PerGroupDropsScoreboardHandler();
+
+    private final PacketInterceptorHandler packetInterceptorHandler;
+    private final KiwiPerGroupDropsProvider provider;
+
+    KiwiPerGroupDropsImpl(JavaPlugin plugin) {
+        KiwiSpigotLibrary library = KiwiSpigotLibrary.register(plugin);
+
+        this.packetInterceptorHandler = library.getPacketInterceptorHandler();
+        this.provider = new KiwiPerGroupDropsProvider();
+
+        // Only register the scoreboard when there are no instances yet
+        if (INSTANCES.isEmpty()) {
+            plugin.getServer().getPluginManager().registerEvents(scoreboardHandler, plugin);
+        }
+
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ItemDropHandler(this), plugin);
+
+        INSTANCES.put(plugin, this);
+    }
+
+    @Override
+    public @NotNull PerGroupDropsScoreboardHandler getScoreboardHandler() {
+        return scoreboardHandler;
+    }
+
+    @Override
+    public void setGroupProvider(@NotNull GroupProvider groupProvider) {
+        this.provider.setGroupProvider(groupProvider);
+    }
+
+    @Override
+    public void setGlowProvider(@NotNull GlowProvider glowProvider) {
+        this.provider.setGlowProvider(glowProvider);
+    }
+
+    @EventHandler
+    private void onPluginDisable(PluginDisableEvent event) {
+        if (!(event.getPlugin() instanceof JavaPlugin javaPlugin)) return;
+
+        INSTANCES.remove(javaPlugin);
+        HandlerList.unregisterAll(javaPlugin);
+
+        // If there are still instances left, register scoreboard handler to the first instance
+        if (!INSTANCES.isEmpty()) {
+            for (JavaPlugin plugin : INSTANCES.keySet()) {
+                plugin.getServer().getPluginManager().registerEvents(scoreboardHandler, plugin);
+                break;
+            }
+        }
+    }
+}

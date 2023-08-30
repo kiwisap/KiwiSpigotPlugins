@@ -1,4 +1,4 @@
-package nl.itz_kiwisap_.spigot.pergroupdrops.api.provider;
+package nl.itz_kiwisap_.spigot.pergroupdrops.provider;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
