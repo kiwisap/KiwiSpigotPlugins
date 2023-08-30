@@ -3,8 +3,6 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.plugin;
 import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.test.TestGlowProvider;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.test.TestGroupProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard.PerGroupDropsScoreboardHandler;
@@ -22,9 +20,6 @@ public final class KiwiPerGroupDropsPlugin extends JavaPlugin implements KiwiPer
 
         KiwiPerGroupDropsPluginSettingsProvider settingsProvider = new KiwiPerGroupDropsPluginSettingsProvider(this, super.getConfig());
         this.instance = KiwiPerGroupDrops.create(this, settingsProvider);
-
-        this.setGlowProvider(new TestGlowProvider());
-        this.setGroupProvider(new TestGroupProvider());
     }
 
     @Override
