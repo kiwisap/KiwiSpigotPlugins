@@ -3,6 +3,7 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard;
 import nl.itz_kiwisap_.spigot.nms.KiwiNMS;
 import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowColor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -19,17 +20,15 @@ public final class PerGroupDropsScoreboardHandler implements Listener {
 
     private static final String TEAM_NAME = "KIWI_PER_GROUP_DROPS_%s";
 
-    private final Map<ChatColor, KScoreboardTeam> teams = new HashMap<>();
+    private final Map<GlowColor, KScoreboardTeam> teams = new HashMap<>();
 
     public PerGroupDropsScoreboardHandler() {
-        for (ChatColor color : ChatColor.values()) {
-            if (color.isColor()) {
-                this.teams.put(color, KiwiNMS.getInstance().createScoreboardTeam(TEAM_NAME.formatted(color.name())).setColor(color));
-            }
+        for (GlowColor color : GlowColor.values()) {
+            this.teams.put(color, KiwiNMS.getInstance().createScoreboardTeam(TEAM_NAME.formatted(color.name())).setColor(color.getChatColor()));
         }
     }
 
-    public KScoreboardTeam getTeam(ChatColor color) {
+    public KScoreboardTeam getTeam(GlowColor color) {
         return this.teams.get(color);
     }
 

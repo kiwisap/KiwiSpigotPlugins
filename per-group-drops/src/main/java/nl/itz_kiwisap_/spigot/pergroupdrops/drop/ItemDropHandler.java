@@ -6,9 +6,9 @@ import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketSpawnEnt
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsConstants;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowColor;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -61,7 +61,7 @@ public final class ItemDropHandler implements Listener {
                     String glowColor = entity.getPersistentDataContainer().get(KiwiPerGroupDropsConstants.GLOW_KEY, PersistentDataType.STRING);
                     if (glowColor == null) return;
 
-                    KScoreboardTeam scoreboardTeam = this.instance.getScoreboardHandler().getTeam(ChatColor.valueOf(glowColor));
+                    KScoreboardTeam scoreboardTeam = this.instance.getScoreboardHandler().getTeam(GlowColor.valueOf(glowColor));
                     if (scoreboardTeam == null) return;
 
                     KiwiNMS.getInstance().markEntityFlagsMetadataDirty(item);
@@ -119,7 +119,7 @@ public final class ItemDropHandler implements Listener {
 
         GlowProvider glowProvider = this.instance.getProvider().getGlowProvider();
         if (glowProvider != null) {
-            ChatColor glowColor = glowProvider.getGlowColor(group, item.getItemStack());
+            GlowColor glowColor = glowProvider.getGlowColor(group, item.getItemStack());
 
             if (glowColor != null) {
                 KScoreboardTeam scoreboardTeam = this.instance.getScoreboardHandler().getTeam(glowColor);
