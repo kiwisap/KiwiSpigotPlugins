@@ -2,6 +2,7 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks;
 
 import nl.itz_kiwisap_.spigot.pergroupdrops.plugin.KiwiPerGroupDropsPlugin;
 import nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.bentobox.BentoBoxHook;
+import nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.iridiumskyblock.IridiumSkyblockHook;
 import nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.superiorskyblock2.SuperiorSkyblock2Hook;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
@@ -22,8 +23,9 @@ public final class KiwiPerGroupDropsHooks {
     public KiwiPerGroupDropsHooks(KiwiPerGroupDropsPlugin plugin) {
         this.plugin = plugin;
 
-        this.hooks.put(SuperiorSkyblock2Hook.NAME.toLowerCase(), SuperiorSkyblock2Hook.class);
         this.hooks.put(BentoBoxHook.NAME.toLowerCase(), BentoBoxHook.class);
+        this.hooks.put(IridiumSkyblockHook.NAME.toLowerCase(), IridiumSkyblockHook.class);
+        this.hooks.put(SuperiorSkyblock2Hook.NAME.toLowerCase(), SuperiorSkyblock2Hook.class);
     }
 
     public void enableGroupProviderHook(String hookName) {

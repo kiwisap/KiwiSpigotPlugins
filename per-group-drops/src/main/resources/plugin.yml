@@ -7,3 +7,4 @@ api-version: 1.16
 softdepend:
   - SuperiorSkyblock2
   - BentoBox
+  - IridiumSkyblock

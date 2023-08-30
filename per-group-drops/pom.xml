@@ -43,6 +43,13 @@
             <version>1.24.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>some.local.jar</groupId>
+            <artifactId>IridiumSkyblock</artifactId>
+            <version>4.0.5</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/../lib/IridiumSkyblock-4.0.5.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
