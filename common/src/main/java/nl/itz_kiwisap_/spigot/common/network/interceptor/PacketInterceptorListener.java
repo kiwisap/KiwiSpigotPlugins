@@ -34,7 +34,9 @@ final class PacketInterceptorListener extends ChannelDuplexHandler {
             return;
         }
 
-        Collection<KPacket> kPackets = KiwiNMS.getInstance().transformClientboundPacket(msg);
+        KiwiNMS nms = KiwiNMS.getInstance();
+
+        Collection<KPacket> kPackets = nms.transformClientboundPacket(msg);
         if (kPackets == null || kPackets.isEmpty()) { // Not a packet we have to listen to
             super.write(ctx, msg, promise);
             return;
@@ -53,6 +55,16 @@ final class PacketInterceptorListener extends ChannelDuplexHandler {
 
             for (PacketInterceptor interceptor : interceptors) {
                 if (interceptor.intercept(this.player, kPacket)) {
+                    if (nms.isBundlePacket(msg)) {
+                        nms.removePacketFromBundle(msg, kPacket.getNMSInstance());
+
+                        if (nms.isBundleEmpty(msg)) {
+                            intercepted = true;
+                        }
+
+                        continue;
+                    }
+
                     intercepted = true;
                 }
             }
@@ -77,7 +89,9 @@ final class PacketInterceptorListener extends ChannelDuplexHandler {
             return;
         }
 
-        Collection<KPacket> kPackets = KiwiNMS.getInstance().transformServerboundPacket(msg);
+        KiwiNMS nms = KiwiNMS.getInstance();
+
+        Collection<KPacket> kPackets = nms.transformServerboundPacket(msg);
         if (kPackets == null) { // Not a packet we have to listen to
             super.channelRead(ctx, msg);
             return;
@@ -96,6 +110,16 @@ final class PacketInterceptorListener extends ChannelDuplexHandler {
 
             for (PacketInterceptor interceptor : interceptors) {
                 if (interceptor.intercept(this.player, kPacket)) {
+                    if (nms.isBundlePacket(msg)) {
+                        nms.removePacketFromBundle(msg, kPacket.getNMSInstance());
+
+                        if (nms.isBundleEmpty(msg)) {
+                            intercepted = true;
+                        }
+
+                        continue;
+                    }
+
                     intercepted = true;
                 }
             }

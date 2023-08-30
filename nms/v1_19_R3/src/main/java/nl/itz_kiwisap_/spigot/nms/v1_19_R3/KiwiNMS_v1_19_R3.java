@@ -4,9 +4,12 @@ import io.netty.channel.Channel;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -17,6 +20,7 @@ import nl.itz_kiwisap_.spigot.common.utils.JavaReflections;
 import nl.itz_kiwisap_.spigot.nms.KiwiNMS;
 import nl.itz_kiwisap_.spigot.nms.network.KPacket;
 import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
+import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketEntityMetadata;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.nms.v1_19_R3.network.PacketTransformer_v1_19_R3;
 import nl.itz_kiwisap_.spigot.nms.v1_19_R3.scoreboard.KScoreboardTeam_v1_19_R3;
@@ -26,6 +30,7 @@ import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -102,12 +107,46 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
 
     @Override
     public Collection<KPacket> transformClientboundPacket(Object packetObject) {
-        return this.packetTransformer.transformClientboundPacket(packetObject);
+        return this.packetTransformer.transformClientboundPacket(null, packetObject);
     }
 
     @Override
     public Collection<KPacket> transformServerboundPacket(Object packetObject) {
         return this.packetTransformer.transformServerboundPacket(packetObject);
+    }
+
+    @Override
+    public boolean isBundlePacket(Object packetObject) {
+        return this.packetTransformer.isBundlePacket(packetObject);
+    }
+
+    @Override
+    public boolean isBundleEmpty(Object bundlePacket) {
+        return this.packetTransformer.isBundleEmpty(bundlePacket);
+    }
+
+    @Override
+    public void addPacketToBundle(Object bundlePacket, Object packetObject) {
+        this.packetTransformer.addPacketToBundle(bundlePacket, packetObject);
+    }
+
+    @Override
+    public void removePacketFromBundle(Object bundlePacket, Object packetObject) {
+        this.packetTransformer.removePacketFromBundle(bundlePacket, packetObject);
+    }
+
+    @Override
+    public KiwiPacketWrapper createPacketEntityMetadata(int entityId, List<KClientboundPacketEntityMetadata.Entry<?>> entries) {
+        List<SynchedEntityData.DataValue<?>> items = new ArrayList<>();
+        for (KClientboundPacketEntityMetadata.Entry<?> entry : entries) {
+            SynchedEntityData.DataValue<?> dataValue = this.createDataValue(entry);
+            if (dataValue != null) {
+                items.add(dataValue);
+            }
+        }
+
+        ClientboundSetEntityDataPacket packet = new ClientboundSetEntityDataPacket(entityId, items);
+        return new KiwiPacketWrapper(packet);
     }
 
     @Override
@@ -120,5 +159,13 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
     public KiwiPacketWrapper createPacketScoreboardTeamEntityAdd(KScoreboardTeam team, String entityName) {
         ClientboundSetPlayerTeamPacket packet = ClientboundSetPlayerTeamPacket.createPlayerPacket((PlayerTeam) team.getNMSInstance(), entityName, ClientboundSetPlayerTeamPacket.Action.ADD);
         return new KiwiPacketWrapper(packet);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> SynchedEntityData.DataValue<T> createDataValue(KClientboundPacketEntityMetadata.Entry<T> entry) {
+        EntityDataSerializer<T> serializer = (EntityDataSerializer<T>) EntityDataSerializers.getSerializer(entry.serializerId());
+        if (serializer == null) return null;
+
+        return new SynchedEntityData.DataValue<>(entry.index(), serializer, entry.value());
     }
 }

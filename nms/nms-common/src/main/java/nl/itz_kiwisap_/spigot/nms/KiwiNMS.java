@@ -3,6 +3,7 @@ package nl.itz_kiwisap_.spigot.nms;
 import io.netty.channel.Channel;
 import nl.itz_kiwisap_.spigot.nms.network.KPacket;
 import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
+import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketEntityMetadata;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -36,6 +37,16 @@ public interface KiwiNMS {
     Collection<KPacket> transformClientboundPacket(Object packetObject);
 
     Collection<KPacket> transformServerboundPacket(Object packetObject);
+
+    boolean isBundlePacket(Object packetObject);
+
+    boolean isBundleEmpty(Object bundlePacket);
+
+    void addPacketToBundle(Object bundlePacket, Object packetObject);
+
+    void removePacketFromBundle(Object bundlePacket, Object packetObject);
+
+    KiwiPacketWrapper createPacketEntityMetadata(int entityId, List<KClientboundPacketEntityMetadata.Entry<?>> entries);
 
     KiwiPacketWrapper createPacketScoreboardTeamInitialize(KScoreboardTeam team);
 

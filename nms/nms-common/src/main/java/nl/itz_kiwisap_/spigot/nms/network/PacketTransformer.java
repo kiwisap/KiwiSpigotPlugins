@@ -7,11 +7,19 @@ import java.util.Collection;
 
 public interface PacketTransformer {
 
-    Collection<KPacket> transformClientboundPacket(Object packetObject);
+    Collection<KPacket> transformClientboundPacket(Object bundlePacketObject, Object packetObject);
 
     Collection<KPacket> transformServerboundPacket(Object packetObject);
 
-    KClientboundPacketSpawnEntity transformSpawnEntity(Object packetObject);
+    boolean isBundlePacket(Object packetObject);
 
-    KClientboundPacketEntityMetadata transformEntityMetadata(Object packetObject);
+    boolean isBundleEmpty(Object bundlePacket);
+
+    void addPacketToBundle(Object bundlePacket, Object packetObject);
+
+    void removePacketFromBundle(Object bundlePacket, Object packetObject);
+
+    KClientboundPacketSpawnEntity transformSpawnEntity(Object bundlePacketObject, Object packetObject);
+
+    KClientboundPacketEntityMetadata transformEntityMetadata(Object bundlePacketObject, Object packetObject);
 }

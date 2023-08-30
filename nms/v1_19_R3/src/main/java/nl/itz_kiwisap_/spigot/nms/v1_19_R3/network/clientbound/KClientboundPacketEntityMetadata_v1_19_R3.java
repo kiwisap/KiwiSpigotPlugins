@@ -1,5 +1,6 @@
 package nl.itz_kiwisap_.spigot.nms.v1_19_R3.network.clientbound;
 
+import net.minecraft.network.protocol.game.ClientboundBundlePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -13,12 +14,14 @@ import java.util.List;
 
 public final class KClientboundPacketEntityMetadata_v1_19_R3 implements KClientboundPacketEntityMetadata {
 
+    private final ClientboundBundlePacket bundlePacket;
     private final ClientboundSetEntityDataPacket packet;
 
     private final int entityId;
     private final List<Entry<?>> entries;
 
-    public KClientboundPacketEntityMetadata_v1_19_R3(ClientboundSetEntityDataPacket packet) {
+    public KClientboundPacketEntityMetadata_v1_19_R3(ClientboundBundlePacket bundlePacket, ClientboundSetEntityDataPacket packet) {
+        this.bundlePacket = bundlePacket;
         this.packet = packet;
 
         this.entityId = packet.id();
@@ -77,5 +80,10 @@ public final class KClientboundPacketEntityMetadata_v1_19_R3 implements KClientb
     @Override
     public Object getNMSInstance() {
         return this.packet;
+    }
+
+    @Override
+    public Object getBundleNMSInstance() {
+        return this.bundlePacket;
     }
 }

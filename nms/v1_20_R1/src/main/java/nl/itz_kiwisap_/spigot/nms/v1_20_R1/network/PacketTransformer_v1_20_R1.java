@@ -1,5 +1,6 @@
 package nl.itz_kiwisap_.spigot.nms.v1_20_R1.network;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -19,12 +20,12 @@ import java.util.List;
 public final class PacketTransformer_v1_20_R1 implements PacketTransformer {
 
     @Override
-    public Collection<KPacket> transformClientboundPacket(Object packetObject) {
+    public Collection<KPacket> transformClientboundPacket(Object bundlePacketObject, Object packetObject) {
         if (packetObject instanceof ClientboundBundlePacket clientboundBundlePacket) {
             List<KPacket> packets = new ArrayList<>();
 
             for (Packet<ClientGamePacketListener> subPacket : clientboundBundlePacket.subPackets()) {
-                Collection<KPacket> kPackets = this.transformClientboundPacket(subPacket);
+                Collection<KPacket> kPackets = this.transformClientboundPacket(clientboundBundlePacket, subPacket);
                 if (kPackets != null && !kPackets.isEmpty()) {
                     packets.addAll(kPackets);
                 }
@@ -34,11 +35,11 @@ public final class PacketTransformer_v1_20_R1 implements PacketTransformer {
         }
 
         if (packetObject instanceof ClientboundAddEntityPacket clientboundAddEntityPacket) {
-            return List.of(this.transformSpawnEntity(clientboundAddEntityPacket));
+            return List.of(this.transformSpawnEntity(bundlePacketObject, clientboundAddEntityPacket));
         }
 
         if (packetObject instanceof ClientboundSetEntityDataPacket clientboundSetEntityDataPacket) {
-            return List.of(this.transformEntityMetadata(clientboundSetEntityDataPacket));
+            return List.of(this.transformEntityMetadata(bundlePacketObject, clientboundSetEntityDataPacket));
         }
 
         return null;
@@ -50,18 +51,47 @@ public final class PacketTransformer_v1_20_R1 implements PacketTransformer {
     }
 
     @Override
-    public KClientboundPacketSpawnEntity transformSpawnEntity(Object packetObject) {
+    public boolean isBundlePacket(Object packetObject) {
+        return packetObject instanceof ClientboundBundlePacket;
+    }
+
+    @Override
+    public boolean isBundleEmpty(Object bundlePacket) {
+        return bundlePacket instanceof ClientboundBundlePacket bundle && Iterables.isEmpty(bundle.subPackets());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void addPacketToBundle(Object bundlePacket, Object packetObject) {
+        if (bundlePacket instanceof ClientboundBundlePacket bundle && packetObject instanceof Packet<?> packet) {
+            if (bundle.subPackets() instanceof Collection<Packet<ClientGamePacketListener>> collection) {
+                collection.add((Packet<ClientGamePacketListener>) packet);
+            }
+        }
+    }
+
+    @Override
+    public void removePacketFromBundle(Object bundlePacket, Object packetObject) {
+        if (bundlePacket instanceof ClientboundBundlePacket bundle && packetObject instanceof Packet<?>) {
+            Iterables.removeIf(bundle.subPackets(), subPacket -> subPacket.equals(packetObject));
+        }
+    }
+
+    @Override
+    public KClientboundPacketSpawnEntity transformSpawnEntity(Object bundlePacketObject, Object packetObject) {
         if (packetObject instanceof ClientboundAddEntityPacket packet) {
-            return new KClientboundPacketSpawnEntity_v1_20_R1(packet);
+            ClientboundBundlePacket bundlePacket = bundlePacketObject instanceof ClientboundBundlePacket bundle ? bundle : null;
+            return new KClientboundPacketSpawnEntity_v1_20_R1(bundlePacket, packet);
         }
 
         return null;
     }
 
     @Override
-    public KClientboundPacketEntityMetadata transformEntityMetadata(Object packetObject) {
+    public KClientboundPacketEntityMetadata transformEntityMetadata(Object bundlePacketObject, Object packetObject) {
         if (packetObject instanceof ClientboundSetEntityDataPacket packet) {
-            return new KClientboundPacketEntityMetadata_v1_20_R1(packet);
+            ClientboundBundlePacket bundlePacket = bundlePacketObject instanceof ClientboundBundlePacket bundle ? bundle : null;
+            return new KClientboundPacketEntityMetadata_v1_20_R1(bundlePacket, packet);
         }
 
         return null;

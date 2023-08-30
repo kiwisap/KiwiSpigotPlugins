@@ -15,13 +15,13 @@ import java.util.List;
 public final class PacketTransformer_v1_17_R1 implements PacketTransformer {
 
     @Override
-    public Collection<KPacket> transformClientboundPacket(Object packetObject) {
+    public Collection<KPacket> transformClientboundPacket(Object bundlePacketObject, Object packetObject) {
         if (packetObject instanceof ClientboundAddEntityPacket clientboundAddEntityPacket) {
-            return List.of(this.transformSpawnEntity(clientboundAddEntityPacket));
+            return List.of(this.transformSpawnEntity(bundlePacketObject, clientboundAddEntityPacket));
         }
 
         if (packetObject instanceof ClientboundSetEntityDataPacket clientboundSetEntityDataPacket) {
-            return List.of(this.transformEntityMetadata(clientboundSetEntityDataPacket));
+            return List.of(this.transformEntityMetadata(bundlePacketObject, clientboundSetEntityDataPacket));
         }
 
         return null;
@@ -33,7 +33,25 @@ public final class PacketTransformer_v1_17_R1 implements PacketTransformer {
     }
 
     @Override
-    public KClientboundPacketSpawnEntity transformSpawnEntity(Object packetObject) {
+    public boolean isBundlePacket(Object packetObject) {
+        return false;
+    }
+
+    @Override
+    public boolean isBundleEmpty(Object bundlePacket) {
+        return false;
+    }
+
+    @Override
+    public void addPacketToBundle(Object bundlePacket, Object packetObject) {
+    }
+
+    @Override
+    public void removePacketFromBundle(Object bundlePacket, Object packetObject) {
+    }
+
+    @Override
+    public KClientboundPacketSpawnEntity transformSpawnEntity(Object bundlePacketObject, Object packetObject) {
         if (packetObject instanceof ClientboundAddEntityPacket packet) {
             return new KClientboundPacketSpawnEntity_v1_17_R1(packet);
         }
@@ -42,7 +60,7 @@ public final class PacketTransformer_v1_17_R1 implements PacketTransformer {
     }
 
     @Override
-    public KClientboundPacketEntityMetadata transformEntityMetadata(Object packetObject) {
+    public KClientboundPacketEntityMetadata transformEntityMetadata(Object bundlePacketObject, Object packetObject) {
         if (packetObject instanceof ClientboundSetEntityDataPacket packet) {
             return new KClientboundPacketEntityMetadata_v1_17_R1(packet);
         }
