@@ -5,7 +5,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -25,7 +24,6 @@ import nl.itz_kiwisap_.spigot.nms.v1_19_R3.network.PacketTransformer_v1_19_R3;
 import nl.itz_kiwisap_.spigot.nms.v1_19_R3.scoreboard.KScoreboardTeam_v1_19_R3;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -84,13 +82,6 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
     public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
         Entity nmsEntity = ((CraftWorld) world).getHandle().getEntity(entityId);
         return nmsEntity == null ? null : nmsEntity.getBukkitEntity();
-    }
-
-    @Override
-    public void markEntityFlagsMetadataDirty(org.bukkit.entity.Entity entity) {
-        Entity nmsEntity = ((CraftEntity) entity).getHandle();
-        EntityDataAccessor<Byte> accessor = EntityDataSerializers.BYTE.createAccessor(ENTITY_FLAGS_INDEX);
-        nmsEntity.getEntityData().markDirty(accessor);
     }
 
     @Override

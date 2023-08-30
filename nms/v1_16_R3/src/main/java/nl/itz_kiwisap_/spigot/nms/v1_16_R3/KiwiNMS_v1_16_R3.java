@@ -12,7 +12,6 @@ import nl.itz_kiwisap_.spigot.nms.v1_16_R3.network.PacketTransformer_v1_16_R3;
 import nl.itz_kiwisap_.spigot.nms.v1_16_R3.scoreboard.KScoreboardTeam_v1_16_R3;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -72,13 +71,6 @@ public final class KiwiNMS_v1_16_R3 implements KiwiNMS {
     public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
         Entity nmsEntity = ((CraftWorld) world).getHandle().getEntity(entityId);
         return nmsEntity == null ? null : nmsEntity.getBukkitEntity();
-    }
-
-    @Override
-    public void markEntityFlagsMetadataDirty(org.bukkit.entity.Entity entity) {
-        Entity nmsEntity = ((CraftEntity) entity).getHandle();
-        DataWatcherObject<Byte> accessor = DataWatcherRegistry.a.a(ENTITY_FLAGS_INDEX);
-        nmsEntity.getDataWatcher().markDirty(accessor);
     }
 
     @Override

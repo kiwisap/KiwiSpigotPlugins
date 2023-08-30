@@ -28,8 +28,6 @@ public interface KiwiNMS {
 
     Entity getEntityById(World world, int entityId);
 
-    void markEntityFlagsMetadataDirty(Entity entity);
-
     KScoreboardTeam createScoreboardTeam(String name);
 
     Collection<KPacket> transformClientboundPacket(Object packetObject);
