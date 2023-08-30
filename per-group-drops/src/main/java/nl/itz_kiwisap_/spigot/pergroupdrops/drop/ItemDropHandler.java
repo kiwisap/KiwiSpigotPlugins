@@ -3,6 +3,7 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.drop;
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketSpawnEntity;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
+import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsConstants;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
 import org.bukkit.ChatColor;
@@ -33,6 +34,8 @@ public final class ItemDropHandler implements Listener {
 
         // Don't spawn entities client-side that are not supposed to be seen by the player
         instance.getPacketInterceptorHandler().interceptClientbound(KClientboundPacketSpawnEntity.class, (player, packet) -> {
+            if (player.hasPermission(KiwiPerGroupDropsConstants.BYPASS_PERMISSION)) return false;
+
             GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
             if (groupProvider == null) return false; // No group provider set, so no groups to handle
 
@@ -48,6 +51,8 @@ public final class ItemDropHandler implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerDropItem(PlayerDropItemEvent event) {
+        if (event.getPlayer().hasPermission(KiwiPerGroupDropsConstants.BYPASS_PERMISSION)) return;
+
         GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
         if (groupProvider == null) return; // No group provider set, so no groups to handle
 
@@ -99,7 +104,7 @@ public final class ItemDropHandler implements Listener {
         if (group == null) return; // Player is not in a group, so no group to handle
 
         Collection<Integer> ids = this.groupItems.getOrDefault(group, new HashSet<>());
-        if (this.playerItems.contains(entityId) && !ids.contains(entityId)) {
+        if (!player.hasPermission(KiwiPerGroupDropsConstants.BYPASS_PERMISSION) && this.playerItems.contains(entityId) && !ids.contains(entityId)) {
             event.setCancelled(true);
             return;
         }
