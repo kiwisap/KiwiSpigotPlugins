@@ -1,6 +1,7 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops.drop;
 
 import nl.itz_kiwisap_.spigot.nms.KiwiNMS;
+import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketEntityMetadata;
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketSpawnEntity;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
@@ -28,7 +29,10 @@ import java.util.Map;
 
 public final class ItemDropHandler implements Listener {
 
+    private static final byte GLOWING_FLAG_BIT = 0x40;
+
     private final Collection<Integer> playerItems = new HashSet<>();
+    private final Collection<Integer> glowEntities = new HashSet<>();
     private final Map<String, Collection<Integer>> groupItems = new HashMap<>();
 
     private final KiwiPerGroupDrops instance;
@@ -61,6 +65,7 @@ public final class ItemDropHandler implements Listener {
                     KScoreboardTeam scoreboardTeam = this.instance.getScoreboardHandler().getTeam(ChatColor.valueOf(glowColor));
                     if (scoreboardTeam == null) return;
 
+                    KiwiNMS.getInstance().markEntityFlagsMetadataDirty(item);
                     this.instance.getScoreboardHandler().addItemToTeam(player, scoreboardTeam, item);
                 });
 
@@ -68,6 +73,34 @@ public final class ItemDropHandler implements Listener {
             }
 
             return true;
+        });
+
+        instance.getPacketInterceptorHandler().interceptClientbound(KClientboundPacketEntityMetadata.class, (player, packet) -> {
+            if (player.hasPermission(KiwiPerGroupDropsConstants.BYPASS_PERMISSION)) return false;
+
+            GroupProvider groupProvider = this.instance.getProvider().getGroupProvider();
+            if (groupProvider == null) return false; // No group provider set, so no groups to handle
+
+            String group = groupProvider.getGroup(player);
+            if (group == null) return false; // Player is not in a group, so no group to handle
+
+            int entityId = packet.entityId();
+
+            Collection<Integer> ids = this.groupItems.getOrDefault(group, new HashSet<>());
+            if (this.playerItems.contains(entityId) && ids.contains(entityId) && this.glowEntities.contains(entityId)) {
+                KClientboundPacketEntityMetadata.Entry<Byte> entry = packet.getEntry(0);
+                if (entry == null) return false;
+
+                byte value = entry.value();
+                if ((value & GLOWING_FLAG_BIT) != GLOWING_FLAG_BIT) { // If the glowing flag is not set, set it
+                    value |= GLOWING_FLAG_BIT;
+                }
+
+                packet.removeEntry(0);
+                packet.addEntry(new KClientboundPacketEntityMetadata.Entry<>(0, entry.serializerId(), value));
+            }
+
+            return false;
         });
     }
 
@@ -94,7 +127,8 @@ public final class ItemDropHandler implements Listener {
 
                 // If team is found, enable glowing and add the item to the team with the glow color
                 if (scoreboardTeam != null) {
-                    item.setGlowing(true);
+                    this.glowEntities.add(item.getEntityId());
+                    KiwiNMS.getInstance().markEntityFlagsMetadataDirty(item);
                     item.getPersistentDataContainer().set(KiwiPerGroupDropsConstants.GLOW_KEY, PersistentDataType.STRING, glowColor.name());
                 }
             }
@@ -133,6 +167,7 @@ public final class ItemDropHandler implements Listener {
         }
 
         this.playerItems.remove(entityId);
+        this.glowEntities.remove(entityId);
         ids.remove(entityId);
     }
 
@@ -140,6 +175,7 @@ public final class ItemDropHandler implements Listener {
     private void onItemDespawn(ItemDespawnEvent event) {
         Item item = event.getEntity();
         this.playerItems.remove(item.getEntityId());
+        this.glowEntities.remove(item.getEntityId());
         this.groupItems.values().forEach(items -> items.remove(item.getEntityId()));
     }
 

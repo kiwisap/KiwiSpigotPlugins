@@ -4,6 +4,8 @@ import io.netty.channel.Channel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
@@ -16,6 +18,7 @@ import nl.itz_kiwisap_.spigot.nms.v1_17_R1.network.PacketTransformer_v1_17_R1;
 import nl.itz_kiwisap_.spigot.nms.v1_17_R1.scoreboard.KScoreboardTeam_v1_17_R1;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -23,6 +26,8 @@ import java.util.Collection;
 import java.util.List;
 
 public final class KiwiNMS_v1_17_R1 implements KiwiNMS {
+
+    private static final int ENTITY_FLAGS_INDEX = 0;
 
     private final PacketTransformer_v1_17_R1 packetTransformer;
     private final Scoreboard scoreboard;
@@ -62,8 +67,15 @@ public final class KiwiNMS_v1_17_R1 implements KiwiNMS {
 
     @Override
     public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
-        Entity entity = ((CraftWorld) world).getHandle().getEntity(entityId);
-        return entity == null ? null : entity.getBukkitEntity();
+        Entity nmsEntity = ((CraftWorld) world).getHandle().getEntity(entityId);
+        return nmsEntity == null ? null : nmsEntity.getBukkitEntity();
+    }
+
+    @Override
+    public void markEntityFlagsMetadataDirty(org.bukkit.entity.Entity entity) {
+        Entity nmsEntity = ((CraftEntity) entity).getHandle();
+        EntityDataAccessor<Byte> accessor = EntityDataSerializers.BYTE.createAccessor(ENTITY_FLAGS_INDEX);
+        nmsEntity.getEntityData().markDirty(accessor);
     }
 
     @Override
