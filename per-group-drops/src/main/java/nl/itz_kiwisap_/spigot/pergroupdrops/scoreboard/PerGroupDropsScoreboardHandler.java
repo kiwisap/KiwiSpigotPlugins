@@ -24,7 +24,7 @@ public final class PerGroupDropsScoreboardHandler implements Listener {
     public PerGroupDropsScoreboardHandler() {
         for (ChatColor color : ChatColor.values()) {
             if (color.isColor()) {
-                this.teams.put(color, KiwiNMS.getInstance().createScoreboardTeam(TEAM_NAME.formatted(color.name())));
+                this.teams.put(color, KiwiNMS.getInstance().createScoreboardTeam(TEAM_NAME.formatted(color.name())).setColor(color));
             }
         }
     }
