@@ -1,5 +1,7 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops.drop;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import nl.itz_kiwisap_.spigot.nms.KiwiNMS;
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketEntityMetadata;
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketSpawnEntity;
@@ -7,8 +9,8 @@ import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsConstants;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowColor;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -22,7 +24,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -30,9 +31,9 @@ public final class ItemDropHandler implements Listener {
 
     private static final byte GLOWING_FLAG_BIT = 0x40;
 
-    private final Collection<Integer> playerItems = new HashSet<>();
-    private final Collection<Integer> glowEntities = new HashSet<>();
-    private final Map<String, Collection<Integer>> groupItems = new HashMap<>();
+    private final Collection<Integer> playerItems = Sets.newCopyOnWriteArraySet();
+    private final Collection<Integer> glowEntities = Sets.newCopyOnWriteArraySet();
+    private final Map<String, Collection<Integer>> groupItems = Maps.newConcurrentMap();
 
     private final KiwiPerGroupDrops instance;
 

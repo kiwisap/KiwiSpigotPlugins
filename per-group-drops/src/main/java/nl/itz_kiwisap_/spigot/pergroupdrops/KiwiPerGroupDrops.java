@@ -1,8 +1,8 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops;
 
 import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard.PerGroupDropsScoreboardHandler;
 import org.bukkit.plugin.java.JavaPlugin;
