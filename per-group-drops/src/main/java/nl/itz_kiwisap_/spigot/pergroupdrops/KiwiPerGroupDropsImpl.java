@@ -28,7 +28,7 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
     }
 
     // Make scoreboard handler static so the color teams are only created once
-    private static final PerGroupDropsScoreboardHandler scoreboardHandler = new PerGroupDropsScoreboardHandler();
+    private static PerGroupDropsScoreboardHandler scoreboardHandler;
 
     private final PacketInterceptorHandler packetInterceptorHandler;
     private final KiwiPerGroupDropsProvider provider;
@@ -40,7 +40,8 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
         this.provider = new KiwiPerGroupDropsProvider();
 
         // Only register the scoreboard when there are no instances yet
-        if (INSTANCES.isEmpty()) {
+        if (scoreboardHandler == null) {
+            scoreboardHandler = new PerGroupDropsScoreboardHandler();
             plugin.getServer().getPluginManager().registerEvents(scoreboardHandler, plugin);
         }
 
@@ -73,7 +74,7 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
         HandlerList.unregisterAll(javaPlugin);
 
         // If there are still instances left, register scoreboard handler to the first instance
-        if (!INSTANCES.isEmpty()) {
+        if (!INSTANCES.isEmpty() && scoreboardHandler != null) {
             for (JavaPlugin plugin : INSTANCES.keySet()) {
                 plugin.getServer().getPluginManager().registerEvents(scoreboardHandler, plugin);
                 break;

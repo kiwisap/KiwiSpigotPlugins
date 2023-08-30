@@ -6,6 +6,7 @@ import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface KiwiNMS {
@@ -24,9 +25,9 @@ public interface KiwiNMS {
 
     KScoreboardTeam createScoreboardTeam(String name);
 
-    KPacket transformClientboundPacket(Object packetObject);
+    Collection<KPacket> transformClientboundPacket(Object packetObject);
 
-    KPacket transformServerboundPacket(Object packetObject);
+    Collection<KPacket> transformServerboundPacket(Object packetObject);
 
     KiwiPacketWrapper createPacketScoreboardTeamInitialize(KScoreboardTeam team);
 

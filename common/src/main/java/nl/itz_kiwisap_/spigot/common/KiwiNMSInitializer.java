@@ -15,7 +15,7 @@ final class KiwiNMSInitializer {
     }
 
     static void initialize() throws Exception {
-        Class<?> nmsInstance = JavaReflections.getClass("nl.itz_kiwisap_.spigotlibraries.nms.KiwiNMSInstance");
+        Class<?> nmsInstance = JavaReflections.getClass("nl.itz_kiwisap_.spigot.nms.KiwiNMSInstance");
 
         KiwiNMS instance = switch (ProtocolVersion.getServerVersion()) {
             case MINECRAFT_1_16_5 -> new KiwiNMS_v1_16_R3();

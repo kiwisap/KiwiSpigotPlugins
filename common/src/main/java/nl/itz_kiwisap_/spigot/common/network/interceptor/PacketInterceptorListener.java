@@ -28,31 +28,39 @@ final class PacketInterceptorListener extends ChannelDuplexHandler {
             return;
         }
 
-        Map<Class<? extends KPacket>, Collection<PacketInterceptor<?>>> serverboundInterceptors = this.handler.clientboundInterceptors;
-        if (serverboundInterceptors.isEmpty()) { // No interceptors to listen to
+        Map<Class<? extends KPacket>, Collection<PacketInterceptor<?>>> clientboundInterceptors = this.handler.clientboundInterceptors;
+        if (clientboundInterceptors.isEmpty()) { // No interceptors to listen to
             super.write(ctx, msg, promise);
             return;
         }
 
-        KPacket kPacket = KiwiNMS.getInstance().transformClientboundPacket(msg);
-        if (kPacket == null) { // Not a packet we have to listen to
+        Collection<KPacket> kPackets = KiwiNMS.getInstance().transformClientboundPacket(msg);
+        if (kPackets == null || kPackets.isEmpty()) { // Not a packet we have to listen to
             super.write(ctx, msg, promise);
             return;
         }
 
-        Collection<PacketInterceptor<?>> interceptors = serverboundInterceptors.get(kPacket.getClass());
-        if (interceptors == null || interceptors.isEmpty()) { // No interceptors to listen to
-            super.write(ctx, msg, promise);
-            return;
-        }
+        boolean intercepted = false;
+        for (KPacket kPacket : kPackets) {
+            Class<?> kPacketInterface = (kPacket.getClass().getInterfaces().length == 0) ? null : kPacket.getClass().getInterfaces()[0];
+            if (kPacketInterface == null) continue;
 
-        for (PacketInterceptor interceptor : interceptors) {
-            if (interceptor.intercept(this.player, kPacket)) {
+            Collection<PacketInterceptor<?>> interceptors = clientboundInterceptors.get(kPacketInterface);
+            if (interceptors == null || interceptors.isEmpty()) { // No interceptors to listen to
+                super.write(ctx, msg, promise);
                 return;
+            }
+
+            for (PacketInterceptor interceptor : interceptors) {
+                if (interceptor.intercept(this.player, kPacket)) {
+                    intercepted = true;
+                }
             }
         }
 
-        super.write(ctx, msg, promise);
+        if (!intercepted) {
+            super.write(ctx, msg, promise);
+        }
     }
 
     @SuppressWarnings("unchecked, rawtypes")
@@ -69,24 +77,32 @@ final class PacketInterceptorListener extends ChannelDuplexHandler {
             return;
         }
 
-        KPacket kPacket = KiwiNMS.getInstance().transformServerboundPacket(msg);
-        if (kPacket == null) { // Not a packet we have to listen to
+        Collection<KPacket> kPackets = KiwiNMS.getInstance().transformServerboundPacket(msg);
+        if (kPackets == null) { // Not a packet we have to listen to
             super.channelRead(ctx, msg);
             return;
         }
 
-        Collection<PacketInterceptor<?>> interceptors = serverboundInterceptors.get(kPacket.getClass());
-        if (interceptors == null || interceptors.isEmpty()) { // No interceptors to listen to
-            super.channelRead(ctx, msg);
-            return;
-        }
+        boolean intercepted = false;
+        for (KPacket kPacket : kPackets) {
+            Class<?> kPacketInterface = (kPacket.getClass().getInterfaces().length == 0) ? null : kPacket.getClass().getInterfaces()[0];
+            if (kPacketInterface == null) continue;
 
-        for (PacketInterceptor interceptor : interceptors) {
-            if (interceptor.intercept(this.player, kPacket)) {
+            Collection<PacketInterceptor<?>> interceptors = serverboundInterceptors.get(kPacketInterface);
+            if (interceptors == null || interceptors.isEmpty()) { // No interceptors to listen to
+                super.channelRead(ctx, msg);
                 return;
+            }
+
+            for (PacketInterceptor interceptor : interceptors) {
+                if (interceptor.intercept(this.player, kPacket)) {
+                    intercepted = true;
+                }
             }
         }
 
-        super.channelRead(ctx, msg);
+        if (!intercepted) {
+            super.channelRead(ctx, msg);
+        }
     }
 }

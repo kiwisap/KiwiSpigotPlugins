@@ -16,6 +16,7 @@ import nl.itz_kiwisap_.spigot.nms.v1_18_R2.scoreboard.KScoreboardTeam_v1_18_R2;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public final class KiwiNMS_v1_18_R2 implements KiwiNMS {
@@ -63,12 +64,12 @@ public final class KiwiNMS_v1_18_R2 implements KiwiNMS {
     }
 
     @Override
-    public KPacket transformClientboundPacket(Object packetObject) {
+    public Collection<KPacket> transformClientboundPacket(Object packetObject) {
         return this.packetTransformer.transformClientboundPacket(packetObject);
     }
 
     @Override
-    public KPacket transformServerboundPacket(Object packetObject) {
+    public Collection<KPacket> transformServerboundPacket(Object packetObject) {
         return this.packetTransformer.transformServerboundPacket(packetObject);
     }
 

@@ -9,16 +9,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
+import nl.itz_kiwisap_.spigot.common.utils.JavaReflections;
 import nl.itz_kiwisap_.spigot.nms.KiwiNMS;
 import nl.itz_kiwisap_.spigot.nms.network.KPacket;
 import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
-import nl.itz_kiwisap_.spigot.common.utils.JavaReflections;
 import nl.itz_kiwisap_.spigot.nms.v1_20_R1.network.PacketTransformer_v1_20_R1;
 import nl.itz_kiwisap_.spigot.nms.v1_20_R1.scoreboard.KScoreboardTeam_v1_20_R1;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
 
 public final class KiwiNMS_v1_20_R1 implements KiwiNMS {
@@ -73,12 +74,12 @@ public final class KiwiNMS_v1_20_R1 implements KiwiNMS {
     }
 
     @Override
-    public KPacket transformClientboundPacket(Object packetObject) {
+    public Collection<KPacket> transformClientboundPacket(Object packetObject) {
         return this.packetTransformer.transformClientboundPacket(packetObject);
     }
 
     @Override
-    public KPacket transformServerboundPacket(Object packetObject) {
+    public Collection<KPacket> transformServerboundPacket(Object packetObject) {
         return this.packetTransformer.transformServerboundPacket(packetObject);
     }
 

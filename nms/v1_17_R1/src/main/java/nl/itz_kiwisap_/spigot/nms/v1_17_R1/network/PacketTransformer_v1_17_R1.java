@@ -6,19 +6,22 @@ import nl.itz_kiwisap_.spigot.nms.network.PacketTransformer;
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketSpawnEntity;
 import nl.itz_kiwisap_.spigot.nms.v1_17_R1.network.clientbound.KClientboundPacketSpawnEntity_v1_17_R1;
 
+import java.util.Collection;
+import java.util.List;
+
 public final class PacketTransformer_v1_17_R1 implements PacketTransformer {
 
     @Override
-    public KPacket transformClientboundPacket(Object packetObject) {
+    public Collection<KPacket> transformClientboundPacket(Object packetObject) {
         if (packetObject instanceof ClientboundAddEntityPacket clientboundAddEntityPacket) {
-            return this.transformSpawnEntity(clientboundAddEntityPacket);
+            return List.of(this.transformSpawnEntity(clientboundAddEntityPacket));
         }
 
         return null;
     }
 
     @Override
-    public KPacket transformServerboundPacket(Object packetObject) {
+    public Collection<KPacket> transformServerboundPacket(Object packetObject) {
         return null;
     }
 
