@@ -1,6 +1,11 @@
 settings:
   hide-items-from-other-groups: true
 
+  # If there is no glow provider hook enabled, this will be used.
+  # You can use any of the 16 Minecraft colors.
+  # Leave this blank to disable glow.
+  default-group-glow-color: "WHITE"
+
 hooks:
   # This is the name of the plugin for the group provider you want to use.
   # Available options:

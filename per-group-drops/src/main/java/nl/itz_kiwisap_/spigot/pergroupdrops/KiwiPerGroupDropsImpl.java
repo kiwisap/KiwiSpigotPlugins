@@ -44,7 +44,7 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
         this.settingsProvider.load();
 
         this.packetInterceptorHandler = library.getPacketInterceptorHandler();
-        this.provider = new KiwiPerGroupDropsProvider();
+        this.provider = new KiwiPerGroupDropsProvider(this);
 
         // Only register the scoreboard when there are no instances yet
         if (scoreboardHandler == null) {

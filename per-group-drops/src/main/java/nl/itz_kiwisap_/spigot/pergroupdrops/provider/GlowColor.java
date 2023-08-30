@@ -3,6 +3,8 @@ package nl.itz_kiwisap_.spigot.pergroupdrops.provider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @AllArgsConstructor
@@ -25,4 +27,14 @@ public enum GlowColor {
     WHITE(ChatColor.WHITE);
 
     private final ChatColor chatColor;
+
+    public static @Nullable GlowColor getByName(@NotNull String color) {
+        for (GlowColor glowColor : values()) {
+            if (glowColor.name().equalsIgnoreCase(color)) {
+                return glowColor;
+            }
+        }
+
+        return null;
+    }
 }
