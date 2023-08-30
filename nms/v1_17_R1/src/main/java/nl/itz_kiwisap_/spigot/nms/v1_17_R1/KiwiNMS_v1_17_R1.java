@@ -6,6 +6,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
@@ -35,6 +36,11 @@ public final class KiwiNMS_v1_17_R1 implements KiwiNMS {
     public KiwiNMS_v1_17_R1() {
         this.packetTransformer = new PacketTransformer_v1_17_R1();
         this.scoreboard = new Scoreboard();
+    }
+
+    @Override
+    public void runSync(Runnable runnable) {
+        MinecraftServer.getServer().executeBlocking(runnable);
     }
 
     @Override

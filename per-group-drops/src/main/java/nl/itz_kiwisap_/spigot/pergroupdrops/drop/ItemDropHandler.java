@@ -8,7 +8,6 @@ import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDrops;
 import nl.itz_kiwisap_.spigot.pergroupdrops.KiwiPerGroupDropsConstants;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.GroupProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -55,7 +54,7 @@ public final class ItemDropHandler implements Listener {
 
             Collection<Integer> ids = this.groupItems.getOrDefault(group, new HashSet<>());
             if (ids.contains(entityId)) {
-                Bukkit.getScheduler().runTask(instance.getPlugin(), () -> {
+                KiwiNMS.getInstance().runSync(() -> {
                     Entity entity = KiwiNMS.getInstance().getEntityById(player.getWorld(), entityId);
                     if (!(entity instanceof Item item)) return;
 

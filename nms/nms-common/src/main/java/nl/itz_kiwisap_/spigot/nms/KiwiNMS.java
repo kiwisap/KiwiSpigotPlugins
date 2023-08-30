@@ -17,6 +17,8 @@ public interface KiwiNMS {
         return KiwiNMSInstance.INSTANCE;
     }
 
+    void runSync(Runnable runnable);
+
     void sendPacket(Player player, KiwiPacketWrapper packetWrapper);
 
     void sendPackets(Player player, List<KiwiPacketWrapper> packetWrappers);

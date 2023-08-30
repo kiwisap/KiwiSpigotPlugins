@@ -30,6 +30,11 @@ public final class KiwiNMS_v1_16_R3 implements KiwiNMS {
     }
 
     @Override
+    public void runSync(Runnable runnable) {
+        MinecraftServer.getServer().executeSync(runnable);
+    }
+
+    @Override
     public void sendPacket(Player player, KiwiPacketWrapper packetWrapper) {
         Object packetObject = packetWrapper.packet();
         if (!(packetObject instanceof Packet<?> packet)) {
