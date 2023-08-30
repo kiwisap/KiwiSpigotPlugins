@@ -1,7 +1,5 @@
-package nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.superiorskyblock2;
+package nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.bentobox;
 
-import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
-import com.bgsoftware.superiorskyblock.api.island.Island;
 import nl.itz_kiwisap_.spigot.pergroupdrops.plugin.hooks.PluginHook;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
@@ -9,14 +7,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.api.user.User;
+import world.bentobox.bentobox.database.objects.Island;
 
-public final class SuperiorSkyblock2Hook implements PluginHook {
+public final class BentoBoxHook implements PluginHook {
 
-    public static final String NAME = "SuperiorSkyblock2";
+    public static final String NAME = "BentoBox";
 
     @Override
     public boolean isEnabled() {
-        return Bukkit.getPluginManager().isPluginEnabled("SuperiorSkyblock2");
+        return Bukkit.getPluginManager().isPluginEnabled("BentoBox");
     }
 
     @Override
@@ -26,7 +27,7 @@ public final class SuperiorSkyblock2Hook implements PluginHook {
 
     @Override
     public @NotNull GroupProvider groupProvider() {
-        return new SuperiorSkyblock2GroupProvider();
+        return new BentoBoxGroupProvider();
     }
 
     @Override
@@ -34,12 +35,12 @@ public final class SuperiorSkyblock2Hook implements PluginHook {
         return null;
     }
 
-    private static final class SuperiorSkyblock2GroupProvider implements GroupProvider {
+    private static final class BentoBoxGroupProvider implements GroupProvider {
 
         @Override
         public @Nullable String getGroup(@NotNull Player player) {
-            Island island = SuperiorSkyblockAPI.getPlayer(player).getIsland();
-            return island == null ? null : island.getUniqueId().toString();
+            Island island = BentoBox.getInstance().getIslands().getIsland(player.getWorld(), User.getInstance(player));
+            return island == null ? null : island.getUniqueId();
         }
     }
 }

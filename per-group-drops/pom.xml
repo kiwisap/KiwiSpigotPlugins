@@ -17,6 +17,10 @@
             <id>bg-repo</id>
             <url>https://repo.bg-software.com/repository/api/</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -31,6 +35,12 @@
             <groupId>com.bgsoftware</groupId>
             <artifactId>SuperiorSkyblockAPI</artifactId>
             <version>2023.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>world.bentobox</groupId>
+            <artifactId>bentobox</artifactId>
+            <version>1.24.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

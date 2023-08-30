@@ -6,6 +6,7 @@ hooks:
   # Available options:
   # - "Custom" (default) - Implement your own group provider using the API.
   # - "SuperiorSkyblock2"
+  # - "BentoBox"
   group-provider: "Custom"
 
   # This is the name of the plugin for the glow provider you want to use.
