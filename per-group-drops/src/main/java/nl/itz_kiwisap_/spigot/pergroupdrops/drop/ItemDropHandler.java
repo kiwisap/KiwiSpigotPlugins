@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
+import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 import java.util.Collection;
@@ -112,5 +113,22 @@ public final class ItemDropHandler implements Listener {
         Item item = event.getEntity();
         this.playerItems.remove(item.getEntityId());
         this.groupItems.values().forEach(items -> items.remove(item.getEntityId()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onItemMerge(ItemMergeEvent event) {
+        Item entity = event.getEntity();
+        Item target = event.getTarget();
+
+        if (!this.playerItems.contains(entity.getEntityId()) && !this.playerItems.contains(target.getEntityId())) {
+            return;
+        }
+
+        for (Collection<Integer> value : this.groupItems.values()) {
+            if (value.contains(entity.getEntityId()) && !value.contains(target.getEntityId())) {
+                event.setCancelled(true);
+                break;
+            }
+        }
     }
 }
