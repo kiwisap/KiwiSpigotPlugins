@@ -30,12 +30,14 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
     // Make scoreboard handler static so the color teams are only created once
     private static PerGroupDropsScoreboardHandler scoreboardHandler;
 
+    private final JavaPlugin plugin;
     private final PacketInterceptorHandler packetInterceptorHandler;
     private final KiwiPerGroupDropsProvider provider;
 
     KiwiPerGroupDropsImpl(JavaPlugin plugin) {
         KiwiSpigotLibrary library = KiwiSpigotLibrary.register(plugin);
 
+        this.plugin = plugin;
         this.packetInterceptorHandler = library.getPacketInterceptorHandler();
         this.provider = new KiwiPerGroupDropsProvider();
 

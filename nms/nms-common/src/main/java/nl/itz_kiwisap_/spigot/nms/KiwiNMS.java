@@ -4,6 +4,8 @@ import io.netty.channel.Channel;
 import nl.itz_kiwisap_.spigot.nms.network.KPacket;
 import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -22,6 +24,8 @@ public interface KiwiNMS {
     Channel getPacketChannel(Player player);
 
     Object createChatBaseComponent(String text);
+
+    Entity getEntityById(World world, int entityId);
 
     KScoreboardTeam createScoreboardTeam(String name);
 

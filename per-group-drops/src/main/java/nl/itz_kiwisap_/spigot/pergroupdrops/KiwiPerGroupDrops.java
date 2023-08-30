@@ -20,6 +20,8 @@ public interface KiwiPerGroupDrops {
         return KiwiPerGroupDropsImpl.getInstance(plugin);
     }
 
+    @NotNull JavaPlugin getPlugin();
+
     @ApiStatus.Internal
     @NotNull PacketInterceptorHandler getPacketInterceptorHandler();
 

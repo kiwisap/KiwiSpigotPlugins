@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import nl.itz_kiwisap_.spigot.common.utils.JavaReflections;
@@ -16,6 +17,8 @@ import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.nms.v1_19_R3.network.PacketTransformer_v1_19_R3;
 import nl.itz_kiwisap_.spigot.nms.v1_19_R3.scoreboard.KScoreboardTeam_v1_19_R3;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -65,6 +68,12 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
     @Override
     public Component createChatBaseComponent(String text) {
         return Component.Serializer.fromJson("{\"text\":\"" + text + "\"}");
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
+        Entity entity = ((CraftWorld) world).getHandle().getEntity(entityId);
+        return entity == null ? null : entity.getBukkitEntity();
     }
 
     @Override

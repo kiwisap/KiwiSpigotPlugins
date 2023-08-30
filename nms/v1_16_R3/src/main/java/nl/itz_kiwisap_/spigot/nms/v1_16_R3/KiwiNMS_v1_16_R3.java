@@ -8,6 +8,8 @@ import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
 import nl.itz_kiwisap_.spigot.nms.v1_16_R3.network.PacketTransformer_v1_16_R3;
 import nl.itz_kiwisap_.spigot.nms.v1_16_R3.scoreboard.KScoreboardTeam_v1_16_R3;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -50,6 +52,12 @@ public final class KiwiNMS_v1_16_R3 implements KiwiNMS {
     @Override
     public IChatBaseComponent createChatBaseComponent(String text) {
         return IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + text + "\"}");
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
+        Entity entity = ((CraftWorld) world).getHandle().getEntity(entityId);
+        return entity == null ? null : entity.getBukkitEntity();
     }
 
     @Override
