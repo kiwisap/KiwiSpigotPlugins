@@ -2,7 +2,6 @@ package nl.itz_kiwisap_.spigot.nms.v1_19_R3;
 
 import io.netty.channel.Channel;
 import net.minecraft.network.Connection;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -82,11 +81,6 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
     }
 
     @Override
-    public Component createChatBaseComponent(String text) {
-        return Component.Serializer.fromJson("{\"text\":\"" + text + "\"}");
-    }
-
-    @Override
     public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
         Entity nmsEntity = ((CraftWorld) world).getHandle().getEntity(entityId);
         return nmsEntity == null ? null : nmsEntity.getBukkitEntity();
@@ -102,7 +96,7 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
     @Override
     public KScoreboardTeam createScoreboardTeam(String name) {
         PlayerTeam team = this.scoreboard.addPlayerTeam(name);
-        return new KScoreboardTeam_v1_19_R3(this, team);
+        return new KScoreboardTeam_v1_19_R3(team);
     }
 
     @Override

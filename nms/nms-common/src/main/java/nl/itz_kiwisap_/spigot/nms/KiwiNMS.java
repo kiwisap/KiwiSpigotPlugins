@@ -26,8 +26,6 @@ public interface KiwiNMS {
 
     Channel getPacketChannel(Player player);
 
-    Object createChatBaseComponent(String text);
-
     Entity getEntityById(World world, int entityId);
 
     void markEntityFlagsMetadataDirty(Entity entity);

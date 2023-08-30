@@ -69,11 +69,6 @@ public final class KiwiNMS_v1_16_R3 implements KiwiNMS {
     }
 
     @Override
-    public IChatBaseComponent createChatBaseComponent(String text) {
-        return IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + text + "\"}");
-    }
-
-    @Override
     public org.bukkit.entity.Entity getEntityById(World world, int entityId) {
         Entity nmsEntity = ((CraftWorld) world).getHandle().getEntity(entityId);
         return nmsEntity == null ? null : nmsEntity.getBukkitEntity();
@@ -89,7 +84,7 @@ public final class KiwiNMS_v1_16_R3 implements KiwiNMS {
     @Override
     public KScoreboardTeam createScoreboardTeam(String name) {
         ScoreboardTeam team = this.scoreboard.createTeam(name);
-        return new KScoreboardTeam_v1_16_R3(this, team);
+        return new KScoreboardTeam_v1_16_R3(team);
     }
 
     @Override
