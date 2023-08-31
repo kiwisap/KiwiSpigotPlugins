@@ -1,11 +1,12 @@
 package nl.itz_kiwisap_.spigot.pergroupdrops;
 
 import nl.itz_kiwisap_.spigot.common.KiwiSpigotLibrary;
+import nl.itz_kiwisap_.spigot.common.KiwiSpigotLibraryGetter;
 import nl.itz_kiwisap_.spigot.common.network.interceptor.PacketInterceptorHandler;
 import nl.itz_kiwisap_.spigot.pergroupdrops.drop.ItemDropHandler;
+import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GlowProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.provider.types.GroupProvider;
-import nl.itz_kiwisap_.spigot.pergroupdrops.provider.KiwiPerGroupDropsProvider;
 import nl.itz_kiwisap_.spigot.pergroupdrops.scoreboard.PerGroupDropsScoreboardHandler;
 import nl.itz_kiwisap_.spigot.pergroupdrops.settings.KiwiPerGroupDropsSettingsProvider;
 import org.bukkit.event.EventHandler;
@@ -35,13 +36,13 @@ final class KiwiPerGroupDropsImpl implements KiwiPerGroupDrops, Listener {
     private final KiwiPerGroupDropsProvider provider;
 
     KiwiPerGroupDropsImpl(JavaPlugin plugin, KiwiPerGroupDropsSettingsProvider settingsProvider) {
-        KiwiSpigotLibrary library = KiwiSpigotLibrary.register(plugin);
+        Object library = KiwiSpigotLibraryGetter.get(plugin);
 
         this.plugin = plugin;
         this.settingsProvider = settingsProvider;
         this.settingsProvider.load();
 
-        this.packetInterceptorHandler = library.getPacketInterceptorHandler();
+        this.packetInterceptorHandler = ((KiwiSpigotLibrary) library).getPacketInterceptorHandler();
         this.provider = new KiwiPerGroupDropsProvider(this);
 
         // Only register the scoreboard when there are no instances yet
