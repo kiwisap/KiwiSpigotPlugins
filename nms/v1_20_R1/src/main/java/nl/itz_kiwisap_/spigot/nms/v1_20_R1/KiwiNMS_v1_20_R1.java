@@ -35,8 +35,6 @@ public final class KiwiNMS_v1_20_R1 implements KiwiNMS {
 
     private static final JavaReflections.FieldAccessor<Connection> NETWORK_MANAGER_FIELD;
 
-    private static final int ENTITY_FLAGS_INDEX = 0;
-
     static {
         NETWORK_MANAGER_FIELD = JavaReflections.getField(ServerGamePacketListenerImpl.class, Connection.class, ObfuscatedNames_v1_20_R1.NETWORK_MANAGER);
     }

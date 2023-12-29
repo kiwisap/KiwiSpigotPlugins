@@ -13,6 +13,7 @@
         <module>nms</module>
         <module>common</module>
         <module>per-group-drops</module>
+        <module>custom-recipes</module>
     </modules>
 
     <properties>
@@ -20,6 +21,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <custom-recipes.version>1.0.0</custom-recipes.version>
         <per-group-drops.version>1.0.0</per-group-drops.version>
     </properties>
 

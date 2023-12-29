@@ -3,3 +3,7 @@ per-group-drops:
     - admin permission
         - maybe add toggle mode with double drop for "global drop
     - item rarity plugin hooks (glow)
+
+custom-recipes:
+
+custom-mining-speed:

@@ -38,8 +38,6 @@ public final class KiwiNMS_v1_17_R1 implements KiwiNMS {
         METADATA_PACKET_METADATA_FIELD = JavaReflections.getField(ClientboundSetEntityDataPacket.class, List.class, ObfuscatedNames_v1_17_R1.METADATA_PACKET_METADATA_FIELD);
     }
 
-    private static final int ENTITY_FLAGS_INDEX = 0;
-
     private final PacketTransformer_v1_17_R1 packetTransformer;
     private final Scoreboard scoreboard;
 

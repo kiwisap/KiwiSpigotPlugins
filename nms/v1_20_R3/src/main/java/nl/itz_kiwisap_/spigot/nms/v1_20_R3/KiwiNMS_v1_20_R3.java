@@ -1,4 +1,4 @@
-package nl.itz_kiwisap_.spigot.nms.v1_19_R3;
+package nl.itz_kiwisap_.spigot.nms.v1_20_R3;
 
 import io.netty.channel.Channel;
 import net.minecraft.network.Connection;
@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
@@ -20,30 +21,30 @@ import nl.itz_kiwisap_.spigot.nms.network.KPacket;
 import nl.itz_kiwisap_.spigot.nms.network.KiwiPacketWrapper;
 import nl.itz_kiwisap_.spigot.nms.network.clientbound.KClientboundPacketEntityMetadata;
 import nl.itz_kiwisap_.spigot.nms.scoreboard.KScoreboardTeam;
-import nl.itz_kiwisap_.spigot.nms.v1_19_R3.network.PacketTransformer_v1_19_R3;
-import nl.itz_kiwisap_.spigot.nms.v1_19_R3.scoreboard.KScoreboardTeam_v1_19_R3;
+import nl.itz_kiwisap_.spigot.nms.v1_20_R3.network.PacketTransformer_v1_20_R3;
+import nl.itz_kiwisap_.spigot.nms.v1_20_R3.scoreboard.KScoreboardTeam_v1_20_R3;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
+public final class KiwiNMS_v1_20_R3 implements KiwiNMS {
 
     private static final JavaReflections.FieldAccessor<Connection> NETWORK_MANAGER_FIELD;
 
     static {
-        NETWORK_MANAGER_FIELD = JavaReflections.getField(ServerGamePacketListenerImpl.class, Connection.class, ObfuscatedNames_v1_19_R3.NETWORK_MANAGER);
+        NETWORK_MANAGER_FIELD = JavaReflections.getField(ServerCommonPacketListenerImpl.class, Connection.class, ObfuscatedNames_v1_20_R3.NETWORK_MANAGER);
     }
 
-    private final PacketTransformer_v1_19_R3 packetTransformer;
+    private final PacketTransformer_v1_20_R3 packetTransformer;
     private final Scoreboard scoreboard;
 
-    public KiwiNMS_v1_19_R3() {
-        this.packetTransformer = new PacketTransformer_v1_19_R3();
+    public KiwiNMS_v1_20_R3() {
+        this.packetTransformer = new PacketTransformer_v1_20_R3();
         this.scoreboard = new Scoreboard();
     }
 
@@ -85,7 +86,7 @@ public final class KiwiNMS_v1_19_R3 implements KiwiNMS {
     @Override
     public KScoreboardTeam createScoreboardTeam(String name) {
         PlayerTeam team = this.scoreboard.addPlayerTeam(name);
-        return new KScoreboardTeam_v1_19_R3(team);
+        return new KScoreboardTeam_v1_20_R3(team);
     }
 
     @Override

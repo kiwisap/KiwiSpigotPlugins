@@ -1,0 +1,5 @@
+name: KiwiCustomRecipes
+main: nl.itz_kiwisap_.spigot.customrecipes.plugin.KiwiCustomRecipesPlugin
+version: ${custom-recipes.version}
+author: Itz_KiwiSap_
+api-version: 1.16
