@@ -28,6 +28,19 @@ public final class RecipeHandler {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this::convertBukkitRecipes);
     }
 
+    public void registerRecipe(Recipe recipe) {
+        RecipeWrapper<?> wrapper = RecipeWrapper.createWrapper(recipe);
+
+        RecipeWrapper<?> present = this.recipes.putIfAbsent(recipe.key(), wrapper);
+        if (present != null) {
+            throw new IllegalArgumentException("Recipe with key '" + recipe.key() + "' already exists!");
+        }
+    }
+
+    public void unregisterRecipe(Recipe recipe) {
+        this.recipes.remove(recipe.key());
+    }
+
     public Recipe matchRecipe(ItemStack[][] matrix, @Nullable Recipe checkFirst) {
         if (checkFirst != null) {
             RecipeWrapper<?> wrapper = this.recipes.get(checkFirst.key());
