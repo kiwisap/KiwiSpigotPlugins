@@ -26,7 +26,7 @@ public final class KiwiCustomRecipesInteractListener implements Listener {
         if (event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         Player player = event.getPlayer();
-        if (player.isSneaking()) return;
+        if (player.isSneaking() && !event.getPlayer().getInventory().getItemInMainHand().getType().isAir()) return;
 
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock != null) {

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class ShapelessRecipe extends Recipe {
 
@@ -22,6 +23,11 @@ public abstract class ShapelessRecipe extends Recipe {
 
     public final @NotNull Collection<RecipeIngredient> ingredients() {
         return this.ingredients;
+    }
+
+    @Override
+    public final @NotNull List<RecipeIngredient> listIngredients() {
+        return new ArrayList<>(this.ingredients);
     }
 
     public final void addIngredient(@NotNull RecipeIngredient ingredient) {

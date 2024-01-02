@@ -38,4 +38,9 @@ public final class ExactRecipeIngredient implements RecipeIngredient {
 
         return false;
     }
+
+    @Override
+    public @NotNull List<ItemStack> getChoices() {
+        return new ArrayList<>(this.choices);
+    }
 }

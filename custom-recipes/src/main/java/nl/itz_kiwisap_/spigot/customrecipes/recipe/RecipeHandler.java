@@ -7,6 +7,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,14 +28,34 @@ public final class RecipeHandler {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this::convertBukkitRecipes);
     }
 
-    public Recipe matchRecipe(ItemStack[][] matrix) {
+    public Recipe matchRecipe(ItemStack[][] matrix, @Nullable Recipe checkFirst) {
+        if (checkFirst != null) {
+            RecipeWrapper<?> wrapper = this.recipes.get(checkFirst.key());
+            if (wrapper != null && wrapper.matches(matrix)) {
+                return wrapper.getRecipe();
+            }
+        }
+
         for (RecipeWrapper<?> wrapper : this.recipes.values()) {
+            if (checkFirst != null && wrapper.getRecipe().key().equals(checkFirst.key())) continue;
+
             if (wrapper.matches(matrix)) {
                 return wrapper.getRecipe();
             }
         }
 
         return null;
+    }
+
+    public Recipe matchRecipe(ItemStack[][] matrix) {
+        return this.matchRecipe(matrix, null);
+    }
+
+    public int craft(Recipe recipe, ItemStack[][] matrix, boolean maximise) {
+        RecipeWrapper<?> wrapper = this.recipes.get(recipe.key());
+        if (wrapper == null) return 0;
+
+        return wrapper.craft(matrix, maximise);
     }
 
     public @NotNull Map<NamespacedKey, RecipeWrapper<?>> getRecipes() {

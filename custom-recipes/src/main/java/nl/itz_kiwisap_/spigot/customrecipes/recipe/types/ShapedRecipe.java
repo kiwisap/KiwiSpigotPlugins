@@ -9,7 +9,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class ShapedRecipe extends Recipe {
@@ -24,6 +26,11 @@ public abstract class ShapedRecipe extends Recipe {
 
     public final @NotNull Map<Character, RecipeIngredient> ingredients() {
         return this.ingredients;
+    }
+
+    @Override
+    public final @NotNull List<RecipeIngredient> listIngredients() {
+        return new ArrayList<>(this.ingredients.values());
     }
 
     public final void addIngredient(char key, @NotNull RecipeIngredient ingredient) {

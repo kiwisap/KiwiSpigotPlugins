@@ -39,4 +39,9 @@ public final class MaterialRecipeIngredient implements RecipeIngredient {
 
         return false;
     }
+
+    @Override
+    public @NotNull List<ItemStack> getChoices() {
+        return new ArrayList<>(this.choices.stream().map(ItemStack::new).toList());
+    }
 }
