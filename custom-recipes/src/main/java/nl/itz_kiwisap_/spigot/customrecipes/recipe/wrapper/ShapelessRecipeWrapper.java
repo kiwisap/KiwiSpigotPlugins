@@ -18,7 +18,9 @@ final class ShapelessRecipeWrapper extends RecipeWrapper<ShapelessRecipe> {
         List<RecipeIngredient> clonedIngredients = new ArrayList<>(this.recipe.ingredients());
 
         int matched = 0;
+
         for (int y = 0; y < 3; y++) {
+            xLoop:
             for (int x = 0; x < 3; x++) {
                 ItemStack item = matrix[y][x];
                 if (item == null || item.getType().isAir()) continue;
@@ -28,9 +30,11 @@ final class ShapelessRecipeWrapper extends RecipeWrapper<ShapelessRecipe> {
                     if (ingredient.test(item)) {
                         clonedIngredients.remove(i);
                         matched++;
-                        break;
+                        continue xLoop;
                     }
                 }
+
+                return false;
             }
         }
 
