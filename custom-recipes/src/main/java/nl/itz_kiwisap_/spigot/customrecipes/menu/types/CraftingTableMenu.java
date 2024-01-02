@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 @Menu(
@@ -81,7 +82,12 @@ public final class CraftingTableMenu implements KiwiCustomRecipesMenuProvider {
         contents.pruneCache("RESULT");
         contents.refreshItem(23);
 
-        Bukkit.getScheduler().runTaskLater(contents.menuSession().getInstance().getJavaPlugin(), () -> {
+        BukkitTask task = contents.cache("TASK", null);
+        if (task != null && !task.isCancelled()) {
+            task.cancel();
+        }
+
+        task = Bukkit.getScheduler().runTaskLaterAsynchronously(contents.menuSession().getInstance().getJavaPlugin(), () -> {
             ItemStack[][] matrix = new ItemStack[3][3];
 
             for (int craftingGridSlot : CRAFTING_GRID_SLOTS) {
@@ -100,5 +106,7 @@ public final class CraftingTableMenu implements KiwiCustomRecipesMenuProvider {
             contents.setCache("RESULT", recipe.result());
             contents.refreshItem(23);
         }, 1L);
+
+        contents.setCache("TASK", task);
     }
 }
